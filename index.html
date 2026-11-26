@@ -1,140 +1,457 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Tugas Sains Komputasi Kelompok M - Gaya dan Gerak</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;600&display=swap">
+  <style>
+    :root{--bg:#eef2fa;--pn:rgba(255,255,255,.8);--ink:#14203d;--mut:#5a6789;--acc:#0a7cff;--ln:#d5dcee;--s1:#b9d6ff;--s2:#f4f8ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+    @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070c1b;--pn:rgba(18,26,54,.78);--ink:#e8ecff;--mut:#95a2c9;--acc:#4cc2ff;--ln:#26325f;--s1:#1a2a5e;--s2:#090f22}}
+    :root[data-theme="dark"]{--bg:#070c1b;--pn:rgba(18,26,54,.78);--ink:#e8ecff;--mut:#95a2c9;--acc:#4cc2ff;--ln:#26325f;--s1:#1a2a5e;--s2:#090f22}
+    *{box-sizing:border-box}html,body{height:100%;margin:0}
+    body{background:linear-gradient(160deg,var(--bg),var(--s1));color:var(--ink);font:14px/1.45 Inter,system-ui,sans-serif;display:flex;flex-direction:column}
+    header{display:flex;gap:14px;align-items:center;padding:12px 18px;flex-wrap:wrap}
+    h1{font:700 20px Sora,sans-serif;margin:0;letter-spacing:-.02em}
+    .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+    button,select{font:inherit;color:var(--ink);background:var(--pn);border:1px solid var(--ln);border-radius:999px;padding:7px 14px;cursor:pointer}
+    button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+    .tabs button.on,#go{background:linear-gradient(135deg,#0a7cff,#00c2ff);color:#fff;border-color:transparent;font-weight:600}
+    main{flex:1;min-height:0;display:grid;grid-template-columns:310px 1fr 340px;gap:12px;padding:0 14px 14px}
+    .gl{background:var(--pn);backdrop-filter:blur(14px);border:1px solid var(--ln);border-radius:18px;padding:14px;overflow:auto}
+    .row{margin-bottom:12px}.row label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:600;margin-bottom:4px}
+    .num{display:flex;align-items:center;gap:4px;color:var(--mut);font-weight:400}
+    .num input{width:68px;background:transparent;color:var(--ink);border:1px solid var(--ln);border-radius:8px;padding:4px 6px;text-align:right}
+    input[type=range]{width:100%;accent-color:var(--acc)}
+    .btns{display:flex;gap:8px;margin:6px 0 12px}.btns button{flex:1}
+    #stage{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--ln);background:radial-gradient(circle at 50% 15%,var(--s2),var(--s1));min-height:380px;touch-action:none}
+    #stage canvas{display:block;width:100%;height:100%}
+    .hud{position:absolute;left:12px;top:12px;display:flex;gap:8px;flex-wrap:wrap}
+    .hud span{background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:5px 10px;font-weight:600;font-variant-numeric:tabular-nums}
+    .tip{position:absolute;left:12px;bottom:10px;color:var(--mut);font-size:12px}
+    h2{font:700 14px Sora,sans-serif;margin:0 0 8px}
+    #fbd{width:100%;height:auto;display:block;margin-bottom:10px}
+    #res div{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px dashed var(--ln);font-variant-numeric:tabular-nums}
+    #res b{font-weight:600}#st{display:inline-block;margin:6px 0;padding:4px 12px;border-radius:999px;background:var(--acc);color:#fff;font-weight:600}
+    details{margin-top:10px;color:var(--mut)}summary{cursor:pointer;color:var(--ink);font-weight:600}
+    .lg{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0;font-size:12px}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px}
+    @media(max-width:980px){html,body{height:auto}main{display:flex;flex-direction:column}#stage{height:56vh;order:-1}.tabs{margin-left:0}}
+    @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+  </style>
 </head>
 <body>
-  <script>
-    (function(){
-      document.documentElement.lang='id';
-      const mv=document.createElement('meta');mv.name='viewport';mv.content='width=device-width, initial-scale=1, viewport-fit=cover';document.head.appendChild(mv);
-      document.title='Tugas Sains Komputasi Kelompok M - Gaya dan Gerak';
-      const fl=document.createElement('link');fl.rel='stylesheet';fl.href='https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Inter:wght@400;600&display=swap';document.head.appendChild(fl);
-      const st=document.createElement('style');st.textContent="\n:root{--bg:#eef2fa;--pn:rgba(255,255,255,.8);--ink:#14203d;--mut:#5a6789;--acc:#0a7cff;--ln:#d5dcee;--s1:#b9d6ff;--s2:#f4f8ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}\n@media(prefers-color-scheme:dark){:root:not([data-theme=\"light\"]){--bg:#070c1b;--pn:rgba(18,26,54,.78);--ink:#e8ecff;--mut:#95a2c9;--acc:#4cc2ff;--ln:#26325f;--s1:#1a2a5e;--s2:#090f22}}\n:root[data-theme=\"dark\"]{--bg:#070c1b;--pn:rgba(18,26,54,.78);--ink:#e8ecff;--mut:#95a2c9;--acc:#4cc2ff;--ln:#26325f;--s1:#1a2a5e;--s2:#090f22}\n*{box-sizing:border-box}html,body{height:100%;margin:0}\nbody{background:linear-gradient(160deg,var(--bg),var(--s1));color:var(--ink);font:14px/1.45 Inter,system-ui,sans-serif;display:flex;flex-direction:column}\nheader{display:flex;gap:14px;align-items:center;padding:12px 18px;flex-wrap:wrap}\nh1{font:700 20px Sora,sans-serif;margin:0;letter-spacing:-.02em}\n.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}\nbutton,select{font:inherit;color:var(--ink);background:var(--pn);border:1px solid var(--ln);border-radius:999px;padding:7px 14px;cursor:pointer}\nbutton:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}\n.tabs button.on,#go{background:linear-gradient(135deg,#0a7cff,#00c2ff);color:#fff;border-color:transparent;font-weight:600}\nmain{flex:1;min-height:0;display:grid;grid-template-columns:310px 1fr 340px;gap:12px;padding:0 14px 14px}\n.gl{background:var(--pn);backdrop-filter:blur(14px);border:1px solid var(--ln);border-radius:18px;padding:14px;overflow:auto}\n.row{margin-bottom:12px}.row label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:600;margin-bottom:4px}\n.num{display:flex;align-items:center;gap:4px;color:var(--mut);font-weight:400}\n.num input{width:68px;background:transparent;color:var(--ink);border:1px solid var(--ln);border-radius:8px;padding:4px 6px;text-align:right}\ninput[type=range]{width:100%;accent-color:var(--acc)}\n.btns{display:flex;gap:8px;margin:6px 0 12px}.btns button{flex:1}\n#stage{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--ln);background:radial-gradient(circle at 50% 15%,var(--s2),var(--s1));min-height:380px;touch-action:none}\n#stage canvas{display:block;width:100%;height:100%}\n.hud{position:absolute;left:12px;top:12px;display:flex;gap:8px;flex-wrap:wrap}\n.hud span{background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:5px 10px;font-weight:600;font-variant-numeric:tabular-nums}\n.tip{position:absolute;left:12px;bottom:10px;color:var(--mut);font-size:12px}\nh2{font:700 14px Sora,sans-serif;margin:0 0 8px}\n#fbd{width:100%;height:auto;display:block;margin-bottom:10px}\n#res div{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px dashed var(--ln);font-variant-numeric:tabular-nums}\n#res b{font-weight:600}#st{display:inline-block;margin:6px 0;padding:4px 12px;border-radius:999px;background:var(--acc);color:#fff;font-weight:600}\ndetails{margin-top:10px;color:var(--mut)}summary{cursor:pointer;color:var(--ink);font-weight:600}\n.lg{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0;font-size:12px}.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px}\n@media(max-width:980px){html,body{height:auto}main{display:flex;flex-direction:column}#stage{height:56vh;order:-1}.tabs{margin-left:0}}\n@media(prefers-reduced-motion:reduce){*{transition:none!important}}\n";document.head.appendChild(st);
-      document.body.innerHTML="\n<header><h1>Tugas Sains Komputasi Kelompok M \u00b7 Gaya & Gerak</h1><div class=\"tabs\" id=\"tabs\"></div><button id=\"th\" aria-label=\"Ganti tema\">\u25d0</button></header>\n<main>\n<aside class=\"gl\" id=\"panel\"><div class=\"btns\"><button id=\"go\">\u25b6 Mulai</button><button id=\"rs\">\u27f2 Reset</button></div>\n<div id=\"rows\"></div>\n<div class=\"row\"><label>Gravitasi <select id=\"gsel\"><option value=\"9.8\">Bumi 9,8</option><option value=\"1.62\">Bulan 1,62</option><option value=\"3.71\">Mars 3,71</option><option value=\"24.79\">Jupiter 24,79</option></select></label></div>\n<div class=\"row\"><label>Kecepatan simulasi <span class=\"num\" id=\"spv\">1\u00d7</span></label><input type=\"range\" id=\"sp\" min=\".25\" max=\"2\" step=\".25\" value=\"1\"></div>\n<div class=\"row\"><label><span>Tampilkan vektor gaya</span><input type=\"checkbox\" id=\"va\" checked></label></div></aside>\n<section id=\"stage\"><div class=\"hud\"><span id=\"ht\">t 0,0 s</span><span id=\"hv\">v 0,0 m/s</span><span id=\"hs\">s 0,0 m</span><span id=\"ha\">a 0,0 m/s\u00b2</span></div><div class=\"tip\">Seret = putar \u00b7 Scroll = zoom</div></section>\n<aside class=\"gl\"><h2>Diagram benda bebas</h2><canvas id=\"fbd\"></canvas>\n<div class=\"lg\"><span><i style=\"background:#ef4444\"></i>W berat</span><span><i style=\"background:#22c55e\"></i>N normal</span><span><i style=\"background:#3b82f6\"></i>F gaya</span><span><i style=\"background:#f59e0b\"></i>f gesek</span><span><i style=\"background:#a855f7\"></i>T tegangan</span></div>\n<div id=\"st\"></div><div id=\"res\"></div></aside>\n</main>\n";
-      function start(){
-const $=s=>document.querySelector(s),R=Math.PI/180,fx=(x,d=2)=>(+x).toFixed(d).replace('.',',');
-const MODES={flat:'Bidang datar',incline:'Bidang miring',table:'Katrol + meja',atwood:'Katrol Atwood'};
-const COL={W:'#ef4444',N:'#22c55e',F:'#3b82f6',f:'#f59e0b',T:'#a855f7'};
-const P=[['m1',{flat:'Massa balok (m)',incline:'Massa balok (m)',table:'Massa balok di meja (m₁)',atwood:'Massa kiri (m₁)'},.5,50,.5,5,'kg','flat incline table atwood'],
-['m2',{table:'Massa menggantung (m₂)',atwood:'Massa kanan (m₂)'},.5,50,.5,8,'kg','table atwood'],
-['F',{flat:'Gaya dorong (F)',incline:'Gaya tarik sejajar bidang (F)'},0,300,1,30,'N','flat incline'],
-['mu',{flat:'Koefisien gesek (μ)',incline:'Koefisien gesek (μ)',table:'Koefisien gesek meja (μ)'},0,1,.01,.2,'','flat incline table'],
-['th',{incline:'Sudut bidang miring (θ)'},5,60,1,30,'°','incline']];
-const V={};let mode='flat',g=9.8,s=0,vel=0,tt=0,run=false,ph={};
-// ---------- UI ----------
-const tabs=$('#tabs');for(const k in MODES){const b=document.createElement('button');b.textContent=MODES[k];b.dataset.k=k;b.onclick=()=>setMode(k);tabs.append(b)}
-P.forEach(([id,lb,mn,mx,st,val,un])=>{V[id]=val;const d=document.createElement('div');d.className='row';d.id='row-'+id;
-d.innerHTML=`<label><span></span><span class="num"><input type="number" min="${mn}" max="${mx}" step="${st}">${un}</span></label><input type="range" min="${mn}" max="${mx}" step="${st}">`;
-const [n,r]=[d.querySelector('input[type=number]'),d.querySelector('input[type=range]')];n.value=r.value=val;
-const set=e=>{let x=parseFloat(e.target.value);if(isNaN(x))return;x=Math.min(mx,Math.max(mn,x));V[id]=x;n.value=r.value=x;resetSim();build()};
-n.onchange=set;r.oninput=set;$('#rows').append(d)});
-$('#gsel').onchange=e=>{g=+e.target.value;resetSim();build()};
-$('#sp').oninput=e=>$('#spv').textContent=e.target.value+'×';
-$('#go').onclick=()=>{run=!run;$('#go').textContent=run?'⏸ Jeda':'▶ Mulai'};
-$('#rs').onclick=()=>{resetSim();layout()};
-$('#va').onchange=layout;
-$('#th').onclick=()=>{const r=document.documentElement;r.dataset.theme=(r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'))=='dark'?'light':'dark';drawFBD()};
-function resetSim(){s=0;vel=0;tt=0}
-function setMode(k){mode=k;resetSim();run=false;$('#go').textContent='▶ Mulai';
-tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.k==k));
-P.forEach(([id,lb,,,,,,md])=>{const row=$('#row-'+id);row.hidden=!md.split(' ').includes(k);row.querySelector('label span').textContent=lb[k]||''});
-const c={flat:[.5,.35,17,0,1.5,0],incline:[.5,.3,17,0,2,0],table:[.4,.2,21,-3,-1.5,0],atwood:[.4,.25,19,0,.8,0]}[k];[az,el,dist]=c;tg.set(c[3],c[4],c[5]);build()}
-// ---------- THREE ----------
-const stage=$('#stage'),ren=new THREE.WebGLRenderer({antialias:true,alpha:true});ren.shadowMap.enabled=true;stage.prepend(ren.domElement);
-const sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(42,1,.1,100),tg=new THREE.Vector3();let az=.5,el=.35,dist=17;
-sc.add(new THREE.HemisphereLight(0xffffff,0x667799,.85));
-const dl=new THREE.DirectionalLight(0xffffff,.9);dl.position.set(6,12,8);dl.castShadow=true;dl.shadow.mapSize.set(1024,1024);Object.assign(dl.shadow.camera,{left:-14,right:14,top:14,bottom:-14,far:40});sc.add(dl);
-const root=new THREE.Group(),dyn=new THREE.Group();sc.add(root,dyn);
-function resize(){const w=stage.clientWidth,h=stage.clientHeight;ren.setPixelRatio(Math.min(devicePixelRatio,2));ren.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
-new ResizeObserver(resize).observe(stage);
-let drag=null;stage.onpointerdown=e=>{drag=[e.clientX,e.clientY];stage.setPointerCapture(e.pointerId)};stage.onpointerup=()=>drag=null;
-stage.onpointermove=e=>{if(!drag)return;az-=(e.clientX-drag[0])*.008;el=Math.min(1.4,Math.max(.02,el+(e.clientY-drag[1])*.006));drag=[e.clientX,e.clientY]};
-stage.onwheel=e=>{e.preventDefault();dist=Math.min(40,Math.max(6,dist*(1+e.deltaY*.001)))};
-const lc={};function label(t,c,k=1){const key=t+c;let m=lc[key];if(!m){const cv=document.createElement('canvas');cv.width=160;cv.height=80;const x=cv.getContext('2d');x.fillStyle='rgba(10,16,34,.85)';x.beginPath();(x.roundRect||x.rect).call(x,4,10,152,60,28);x.fill();x.lineWidth=4;x.strokeStyle=c;x.stroke();x.fillStyle='#fff';x.font='700 34px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(t,80,41);m=lc[key]=new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),depthTest:false,transparent:true})}
-const p=new THREE.Sprite(m);p.scale.set(1.2*k,.6*k,1);p.renderOrder=11;return p}
-function tex(a,b){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');x.fillStyle=a;x.fillRect(0,0,128,128);x.strokeStyle=b;x.lineWidth=10;x.strokeRect(5,5,118,118);x.lineWidth=7;x.beginPath();x.moveTo(8,8);x.lineTo(120,120);x.moveTo(120,8);x.lineTo(8,120);x.stroke();return new THREE.CanvasTexture(c)}
-const T1=tex('#b9824a','#6b4423'),T2=tex('#7d93c4','#2f4575');
-const std=(c,r=.8)=>new THREE.MeshStandardMaterial({color:c,roughness:r});
-function box(w,h,d,x,y,z,c,par=root){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),std(c));m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;par.add(m);return m}
-const SZ=m=>.5+.2*Math.cbrt(m);
-function blk(m,t){const z=SZ(m),b=new THREE.Mesh(new THREE.BoxGeometry(z,z,z),new THREE.MeshStandardMaterial({map:t,roughness:.7}));b.castShadow=true;b.userData.z=z;const l=label(fx(m,1)+' kg','#fff',1.2);l.position.y=z/2+.6;b.add(l);root.add(b);return b}
-let b1,b2,pw,rope,L=10,ox=0,pr=.4,pcx=.5,pcy=0,FL=0;
-function build(){while(root.children.length)root.remove(root.children[0]);rope=null;
-const {m1,m2,F,mu,th}=V,t=(mode=='flat'?0:th)*R;
-if(mode=='flat'||mode=='incline'){L=mode=='flat'?12:10;const Lc=L*Math.cos(t),Ls=L*Math.sin(t);ox=-Lc/2;FL=-.3;
-box(Lc+3,.3,3.6,ox+Lc/2,-.15,0,0x5b6f8f);
-if(mode=='incline'){const sh=new THREE.Shape();sh.moveTo(0,0);sh.lineTo(Lc,0);sh.lineTo(Lc,Ls);const w=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:3,bevelEnabled:false}),std(0xc9a66b,.9));w.position.set(ox,0,-1.5);w.castShadow=w.receiveShadow=true;root.add(w)}
-b1=blk(m1,T1)}
-else if(mode=='table'){FL=-6;pr=.4;pcx=.5;const z=SZ(m1);pcy=z/2-pr;
-box(9.6,.3,3,-4.7,-.15,0,0xa0713f);box(.4,5.7,.4,-8.7,-3.15,1.2,0x7b5a34);box(.4,5.7,.4,-8.7,-3.15,-1.2,0x7b5a34);box(.4,5.7,.4,-.6,-3.15,1.2,0x7b5a34);box(.4,5.7,.4,-.6,-3.15,-1.2,0x7b5a34);
-box(.25,pcy+.5,.25,pcx,(pcy-.3)/2,-1.35,0x555e70);box(.8,.2,.25,pcx-.3,-.1,-1.35,0x555e70);
-b1=blk(m1,T1);b2=blk(m2,T2);mkPulley()}
-else{FL=-4;pr=1.1;pcx=0;pcy=4.2;box(.3,pcy+4.3,.3,0,(pcy-4)/2,-1.3,0x555e70);box(3,.2,3,0,-4.1,-.6,0x5b6f8f);b1=blk(m1,T1);b2=blk(m2,T2);mkPulley()}
-dyn.add(new THREE.Group());
-const gr=new THREE.GridHelper(40,40,0x8899bb,0x8899bb);gr.material.transparent=true;gr.material.opacity=.18;gr.position.y=FL-.01;root.add(gr);
-const sh=new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.ShadowMaterial({opacity:.28}));sh.rotation.x=-Math.PI/2;sh.position.y=FL;sh.receiveShadow=true;root.add(sh);
-physics();layout();drawFBD();showRes()}
-function mkPulley(){pw=new THREE.Group();pw.position.set(pcx,pcy,0);const w=new THREE.Mesh(new THREE.CylinderGeometry(pr,pr,.25,40),std(0xd9dde8,.3));w.rotation.x=Math.PI/2;w.castShadow=true;pw.add(w);
-const sp=new THREE.Mesh(new THREE.BoxGeometry(pr*2,.06,.28),std(0x444c60));pw.add(sp);const ax=new THREE.Mesh(new THREE.CylinderGeometry(.06,.06,1.7,12),std(0x333a4a));ax.rotation.x=Math.PI/2;ax.position.z=-.5;pw.add(ax);root.add(pw);
-rope=new THREE.Mesh(new THREE.BufferGeometry(),std(0xf3e6c4,.9));root.add(rope)}
-// ---------- physics ----------
-function physics(){const {m1,m2,F,mu,th}=V;let a=0,B=[],txt=[],st='';
-if(mode=='flat'||mode=='incline'){const t=(mode=='flat'?0:th)*R,W=m1*g,N=W*Math.cos(t),net=F-W*Math.sin(t),fm=mu*N;let f=-net;
-if(Math.abs(net)>fm){a=(net-Math.sign(net)*fm)/m1;f=-Math.sign(net)*fm;st='Bergerak dipercepat (gesekan kinetis)'}else st='Diam (gesekan statis cukup)';
-const u=[Math.cos(t),Math.sin(t)],n=[-Math.sin(t),Math.cos(t)];
-B=[{n:'balok m',t,f:[['W',[0,-W]],['N',[N*n[0],N*n[1]]],['F',[F*u[0],F*u[1]]],['f',[f*u[0],f*u[1]]]]}];
-txt=[['W = m·g',fx(W)+' N'],['N = W·cosθ',fx(N)+' N'],['Gaya penggerak F − W·sinθ',fx(net)+' N'],['f maks = μN',fx(fm)+' N'],['f bekerja',fx(Math.abs(f))+' N'],['a = ΣF/m',fx(a)+' m/s²']]}
-else if(mode=='table'){const W1=m1*g,W2=m2*g,fm=mu*W1;let T,f;if(W2<=fm){T=W2;f=W2;st='Diam (gesekan statis cukup)'}else{a=(W2-fm)/(m1+m2);T=m2*(g-a);f=fm;st='Bergerak dipercepat (gesekan kinetis)'}
-B=[{n:'balok m₁ (di meja)',t:0,f:[['W',[0,-W1]],['N',[0,W1]],['T',[T,0]],['f',[-f,0]]]},{n:'balok m₂ (menggantung)',t:0,f:[['W',[0,-W2]],['T',[0,T]]]}];
-txt=[['W₁ = m₁·g',fx(W1)+' N'],['W₂ = m₂·g',fx(W2)+' N'],['f = μ·m₁·g',fx(f)+' N'],['a = (W₂−f)/(m₁+m₂)',fx(a)+' m/s²'],['T = m₂(g−a)',fx(T)+' N']]}
-else{a=(m2-m1)*g/(m1+m2);const T=2*m1*m2*g/(m1+m2),W1=m1*g,W2=m2*g;st=Math.abs(a)<1e-9?'Seimbang (diam)':'Bergerak dipercepat';
-B=[{n:'benda kiri m₁',t:0,f:[['W',[0,-W1]],['T',[0,T]]]},{n:'benda kanan m₂',t:0,f:[['W',[0,-W2]],['T',[0,T]]]}];
-txt=[['W₁ = m₁·g',fx(W1)+' N'],['W₂ = m₂·g',fx(W2)+' N'],['a = (m₂−m₁)g/(m₁+m₂)',fx(a)+' m/s²'],['T = 2m₁m₂g/(m₁+m₂)',fx(T)+' N']]}
-ph={a,B,txt,st}}
-function showRes(){$('#st').textContent=ph.st;$('#res').innerHTML=ph.txt.map(([k,v])=>`<div><span>${k}</span><b>${v}</b></div>`).join('')}
-// ---------- layout & arrows ----------
-const cyl=new THREE.CylinderGeometry(.045,.045,1,8),cone=new THREE.ConeGeometry(.13,1,12),am={};const mat=c=>am[c]||(am[c]=new THREE.MeshBasicMaterial({color:c,depthTest:false}));
-function arrow(o,v,k,Fm){const Lh=Math.hypot(v[0],v[1]);if(Lh<1e-6)return;const len=Math.max(.6,3.2*Lh/Fm),hd=.34,d=new THREE.Vector3(v[0]/Lh,v[1]/Lh,0),gp=new THREE.Group();
-gp.position.copy(o);gp.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d);
-const a=new THREE.Mesh(cyl,mat(COL[k]));a.scale.y=len-hd;a.position.y=(len-hd)/2;const h=new THREE.Mesh(cone,mat(COL[k]));h.scale.y=hd;h.position.y=len-hd/2;a.renderOrder=h.renderOrder=10;
-const l=label(k,COL[k],.7);l.position.y=len+.3;gp.add(a,h,l);dyn.add(gp)}
-function lim(){const sz=b1.userData.z;if(mode=='flat'||mode=='incline'){const d0=mode=='flat'?sz/2+.6:L*.5;return[sz/2+.05-d0,L-sz/2-.05-d0,d0]}
-if(mode=='table')return[-9,Math.min(4.5,.1-sz/2-(-6.5)),0];return[-2,2,0]}
-function layout(){const sz=b1.userData.z,{a}=ph;
-if(mode=='flat'||mode=='incline'){const t=(mode=='flat'?0:V.th)*R,d=lim()[2]+s;b1.position.set(ox+d*Math.cos(t)-Math.sin(t)*sz/2,d*Math.sin(t)+Math.cos(t)*sz/2,0);b1.rotation.z=t}
-else if(mode=='table'){const x=-6.5+s;b1.position.set(x,sz/2,0);b1.rotation.z=0;const z2=b2.userData.z,top=pcy+pr-pr-1.1-s;
-b2.position.set(pcx+pr,pcy-1.1-s-z2/2,0);const yr=sz/2,pts=[new THREE.Vector3(x+sz/2,yr,0)];
-for(let i=0;i<=12;i++){const q=(90-i*7.5)*R;pts.push(new THREE.Vector3(pcx+pr*Math.cos(q),pcy+pr*Math.sin(q),0))}pts.push(new THREE.Vector3(pcx+pr,b2.position.y+z2/2,0));setRope(pts);pw.rotation.z=-s/pr}
-else{const z1=sz,z2=b2.userData.z,t0=1.6;b1.position.set(-pr,t0+s-z1/2,0);b2.position.set(pr,t0-s-z2/2,0);const pts=[new THREE.Vector3(-pr,t0+s,0)];
-for(let i=0;i<=24;i++){const q=(180-i*7.5)*R;pts.push(new THREE.Vector3(pr*Math.cos(q),pcy+pr*Math.sin(q),0))}pts.push(new THREE.Vector3(pr,t0-s,0));setRope(pts);pw.rotation.z=-s/pr}
-while(dyn.children.length)dyn.remove(dyn.children[0]);
-if($('#va').checked){const Fm=Math.max(...ph.B.flatMap(b=>b.f.map(([,v])=>Math.hypot(...v))),1);ph.B.forEach((b,i)=>b.f.forEach(([k,v])=>arrow((i?b2:b1).position,v,k,Fm)))}}
-function setRope(p){rope.geometry.dispose();rope.geometry=new THREE.TubeGeometry(new THREE.CatmullRomCurve3(p,false,'catmullrom',0),60,.035,6)}
-// ---------- 2D free body diagram ----------
-function drawFBD(){const cv=$('#fbd'),n=ph.B.length,d=devicePixelRatio||1;cv.width=340*d;cv.height=210*n*d;const x=cv.getContext('2d');x.setTransform(d,0,0,d,0,0);
-const ink=getComputedStyle(document.documentElement).getPropertyValue('--ink').trim()||'#222',mut=getComputedStyle(document.documentElement).getPropertyValue('--mut').trim();
-ph.B.forEach((b,i)=>{const cx=170,cy=108+210*i,Fm=Math.max(...b.f.map(([,v])=>Math.hypot(...v)),1);x.fillStyle=mut;x.font='600 12px Inter,sans-serif';x.textAlign='left';x.fillText('Benda: '+b.n,10,20+210*i);
-x.save();x.translate(cx,cy);x.rotate(-b.t);x.fillStyle='#b9824a';x.strokeStyle=ink;x.lineWidth=2;x.fillRect(-22,-22,44,44);x.strokeRect(-22,-22,44,44);x.restore();
-b.f.forEach(([k,v])=>{const Lh=Math.hypot(v[0],v[1]);if(Lh<1e-6)return;const len=Math.max(26,78*Lh/Fm),ux=v[0]/Lh,uy=-v[1]/Lh,ex=cx+ux*len,ey=cy+uy*len;
-x.strokeStyle=x.fillStyle=COL[k];x.lineWidth=3;x.beginPath();x.moveTo(cx,cy);x.lineTo(ex,ey);x.stroke();const an=Math.atan2(uy,ux);x.beginPath();x.moveTo(ex,ey);x.lineTo(ex-10*Math.cos(an-.4),ey-10*Math.sin(an-.4));x.lineTo(ex-10*Math.cos(an+.4),ey-10*Math.sin(an+.4));x.fill();
-x.font='600 12px Inter,sans-serif';x.textAlign=ux<-.3?'right':ux>.3?'left':'center';x.fillText(k+' = '+fx(Lh,1)+' N',ex+ux*6,ey+uy*6+(Math.abs(uy)>.5?(uy>0?12:-4):4))})})}
-matchMedia('(prefers-color-scheme:dark)').onchange=drawFBD;
-// ---------- loop ----------
-let last=performance.now();
-function frame(now){const dt=Math.min(.033,(now-last)/1000)*$('#sp').value;last=now;
-if(run){vel+=ph.a*dt;s+=vel*dt;tt+=dt;const[l0,l1]=lim();if(s>l1||s<l0)resetSim()}
-layout();$('#ht').textContent='t = '+fx(tt,1)+' s';$('#hv').textContent='v = '+fx(Math.abs(vel),1)+' m/s';$('#hs').textContent='s = '+fx(Math.abs(s),1)+' m';$('#ha').textContent='a = '+fx(ph.a,2)+' m/s²';
-cam.position.set(tg.x+dist*Math.cos(el)*Math.sin(az),tg.y+dist*Math.sin(el),tg.z+dist*Math.cos(el)*Math.cos(az));cam.lookAt(tg);ren.render(sc,cam);requestAnimationFrame(frame)}
-setMode('flat');resize();requestAnimationFrame(frame);
+  <header>
+    <h1>Tugas Sains Komputasi Kelompok M · Gaya &amp; Gerak</h1>
+    <div class="tabs" id="tabs"></div>
+    <button id="th" aria-label="Ganti tema">◐</button>
+  </header>
+  <main>
+    <aside class="gl" id="panel">
+      <div class="btns"><button id="go">▶ Mulai</button><button id="rs">⟳ Reset</button></div>
+      <div id="rows"></div>
+      <div class="row">
+        <label>Gravitasi
+          <select id="gsel">
+            <option value="9.8">Bumi 9,8</option>
+            <option value="1.62">Bulan 1,62</option>
+            <option value="3.71">Mars 3,71</option>
+            <option value="24.79">Jupiter 24,79</option>
+          </select>
+        </label>
+      </div>
+      <div class="row">
+        <label>Kecepatan simulasi <span class="num" id="spv">1×</span></label>
+        <input type="range" id="sp" min=".25" max="2" step=".25" value="1">
+      </div>
+      <div class="row">
+        <label><span>Tampilkan vektor gaya</span><input type="checkbox" id="va" checked></label>
+      </div>
+    </aside>
+    <section id="stage">
+      <div class="hud">
+        <span id="ht">t 0,0 s</span>
+        <span id="hv">v 0,0 m/s</span>
+        <span id="hs">s 0,0 m</span>
+        <span id="ha">a 0,0 m/s²</span>
+      </div>
+      <div class="tip">Seret = putar · Scroll = zoom</div>
+    </section>
+    <aside class="gl">
+      <h2>Diagram benda bebas</h2>
+      <canvas id="fbd"></canvas>
+      <div class="lg">
+        <span><i style="background:#ef4444"></i>W berat</span>
+        <span><i style="background:#22c55e"></i>N normal</span>
+        <span><i style="background:#3b82f6"></i>F gaya</span>
+        <span><i style="background:#f59e0b"></i>f gesek</span>
+        <span><i style="background:#a855f7"></i>T tegangan</span>
+      </div>
+      <div id="st"></div>
+      <div id="res"></div>
+    </aside>
+  </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+  (function () {
+    function runSim() {
+      const $ = s => document.querySelector(s), R = Math.PI / 180, fx = (x, d = 2) => (+x).toFixed(d).replace('.', ',');
+      const MODES = { flat: 'Bidang datar', incline: 'Bidang miring', table: 'Katrol + meja', atwood: 'Katrol Atwood' };
+      const COL = { W: '#ef4444', N: '#22c55e', F: '#3b82f6', f: '#f59e0b', T: '#a855f7' };
+      const P = [
+        ['m1', { flat: 'Massa balok (m)', incline: 'Massa balok (m)', table: 'Massa balok di meja (m₁)', atwood: 'Massa kiri (m₁)' }, .5, 50, .5, 5, 'kg', 'flat incline table atwood'],
+        ['m2', { table: 'Massa menggantung (m₂)', atwood: 'Massa kanan (m₂)' }, .5, 50, .5, 8, 'kg', 'table atwood'],
+        ['F', { flat: 'Gaya dorong (F)', incline: 'Gaya tarik sejajar bidang (F)' }, 0, 300, 1, 30, 'N', 'flat incline'],
+        ['mu', { flat: 'Koefisien gesek (μ)', incline: 'Koefisien gesek (μ)', table: 'Koefisien gesek meja (μ)' }, 0, 1, .01, .2, '', 'flat incline table'],
+        ['th', { incline: 'Sudut bidang miring (θ)' }, 5, 60, 1, 30, '°', 'incline']
+      ];
+      const V = {};
+      let mode = 'flat', g = 9.8, s = 0, vel = 0, tt = 0, run = false, ph = {};
+
+      const tabs = $('#tabs');
+      for (const k in MODES) {
+        const b = document.createElement('button');
+        b.textContent = MODES[k];
+        b.dataset.k = k;
+        b.onclick = () => setMode(k);
+        tabs.append(b);
       }
-      const t=document.createElement('script');t.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';t.onload=start;
-      t.onerror=()=>{document.body.insertAdjacentHTML('afterbegin','<p style="padding:20px">Gagal memuat Three.js. Periksa koneksi internet.</p>')};
-      document.head.appendChild(t);
-    })();
+
+      P.forEach(([id, lb, mn, mx, stp, val, un]) => {
+        V[id] = val;
+        const d = document.createElement('div');
+        d.className = 'row';
+        d.id = 'row-' + id;
+        d.innerHTML = `<label><span></span><span class="num"><input type="number" min="${mn}" max="${mx}" step="${stp}">${un}</span></label><input type="range" min="${mn}" max="${mx}" step="${stp}">`;
+        const [n, r] = [d.querySelector('input[type=number]'), d.querySelector('input[type=range]')];
+        n.value = r.value = val;
+        const set = e => {
+          let x = parseFloat(e.target.value);
+          if (isNaN(x)) return;
+          x = Math.min(mx, Math.max(mn, x));
+          V[id] = x;
+          n.value = r.value = x;
+          resetSim();
+          build();
+        };
+        n.onchange = set;
+        r.oninput = set;
+        $('#rows').append(d);
+      });
+
+      $('#gsel').onchange = e => { g = +e.target.value; resetSim(); build(); };
+      $('#sp').oninput = e => { $('#spv').textContent = e.target.value + '×'; };
+      $('#go').onclick = () => {
+        if (run) { run = false; $('#go').textContent = '▶ Mulai'; return; }
+        const [l0, l1] = lim();
+        if (s >= l1 || s <= l0) resetSim();
+        run = true;
+        $('#go').textContent = '⏸ Jeda';
+      };
+      $('#rs').onclick = () => { resetSim(); layout(); };
+      $('#va').onchange = layout;
+      $('#th').onclick = () => {
+        const r = document.documentElement;
+        r.dataset.theme = (r.dataset.theme || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light')) == 'dark' ? 'light' : 'dark';
+        drawFBD();
+      };
+
+      function resetSim() { s = 0; vel = 0; tt = 0; run = false; $('#go').textContent = '▶ Mulai'; }
+
+      function setMode(k) {
+        mode = k;
+        resetSim();
+        tabs.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.k == k));
+        P.forEach(([id, lb, , , , , , md]) => {
+          const row = $('#row-' + id);
+          row.hidden = !md.split(' ').includes(k);
+          row.querySelector('label span').textContent = lb[k] || '';
+        });
+        const c = { flat: [.5, .35, 17, 0, 1.5, 0], incline: [.5, .3, 17, 0, 2, 0], table: [.4, .2, 21, -3, -1.5, 0], atwood: [.4, .25, 19, 0, .8, 0] }[k];
+        [az, el, dist] = c;
+        tg.set(c[3], c[4], c[5]);
+        build();
+      }
+
+      const stage = $('#stage'), ren = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      ren.shadowMap.enabled = true;
+      stage.prepend(ren.domElement);
+
+      const sc = new THREE.Scene(), cam = new THREE.PerspectiveCamera(42, 1, .1, 100), tg = new THREE.Vector3();
+      let az = .5, el = .35, dist = 17;
+
+      sc.add(new THREE.HemisphereLight(0xffffff, 0x667799, .85));
+      const dl = new THREE.DirectionalLight(0xffffff, .9);
+      dl.position.set(6, 12, 8);
+      dl.castShadow = true;
+      dl.shadow.mapSize.set(1024, 1024);
+      Object.assign(dl.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, far: 40 });
+      sc.add(dl);
+
+      const root = new THREE.Group(), dyn = new THREE.Group();
+      sc.add(root, dyn);
+
+      function resizeSim() {
+        const w = stage.clientWidth, h = stage.clientHeight;
+        ren.setPixelRatio(Math.min(devicePixelRatio, 2));
+        ren.setSize(w, h, false);
+        cam.aspect = w / h;
+        cam.updateProjectionMatrix();
+      }
+      new ResizeObserver(resizeSim).observe(stage);
+
+      let drag = null;
+      stage.onpointerdown = e => { drag = [e.clientX, e.clientY]; stage.setPointerCapture(e.pointerId); };
+      stage.onpointerup = () => { drag = null; };
+      stage.onpointermove = e => {
+        if (!drag) return;
+        az -= (e.clientX - drag[0]) * .008;
+        el = Math.min(1.4, Math.max(.02, el + (e.clientY - drag[1]) * .006));
+        drag = [e.clientX, e.clientY];
+      };
+      stage.onwheel = e => {
+        e.preventDefault();
+        dist = Math.min(40, Math.max(6, dist * (1 + e.deltaY * .001)));
+      };
+
+      const lc = {};
+      function label(t, c, k = 1) {
+        const key = t + c;
+        let m = lc[key];
+        if (!m) {
+          const cv = document.createElement('canvas');
+          cv.width = 160; cv.height = 80;
+          const x = cv.getContext('2d');
+          x.fillStyle = 'rgba(10,16,34,.85)';
+          x.beginPath();
+          (x.roundRect || x.rect).call(x, 4, 10, 152, 60, 28);
+          x.fill();
+          x.lineWidth = 4;
+          x.strokeStyle = c;
+          x.stroke();
+          x.fillStyle = '#fff';
+          x.font = '700 34px sans-serif';
+          x.textAlign = 'center';
+          x.textBaseline = 'middle';
+          x.fillText(t, 80, 41);
+          m = lc[key] = new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), depthTest: false, transparent: true });
+        }
+        const p = new THREE.Sprite(m);
+        p.scale.set(1.2 * k, .6 * k, 1);
+        p.renderOrder = 11;
+        return p;
+      }
+
+      function tex(a, b) {
+        const c = document.createElement('canvas');
+        c.width = c.height = 128;
+        const x = c.getContext('2d');
+        x.fillStyle = a; x.fillRect(0, 0, 128, 128);
+        x.strokeStyle = b; x.lineWidth = 10; x.strokeRect(5, 5, 118, 118);
+        x.lineWidth = 7; x.beginPath();
+        x.moveTo(8, 8); x.lineTo(120, 120); x.moveTo(120, 8); x.lineTo(8, 120); x.stroke();
+        return new THREE.CanvasTexture(c);
+      }
+
+      const T1 = tex('#b9824a', '#6b4423'), T2 = tex('#7d93c4', '#2f4575');
+      const std = (c, r = .8) => new THREE.MeshStandardMaterial({ color: c, roughness: r });
+      function box(w, h, d, x, y, z, c, par = root) {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), std(c));
+        m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; par.add(m); return m;
+      }
+      const SZ = m => .5 + .2 * Math.cbrt(m);
+      function blk(m, t) {
+        const z = SZ(m), b = new THREE.Mesh(new THREE.BoxGeometry(z, z, z), new THREE.MeshStandardMaterial({ map: t, roughness: .7 }));
+        b.castShadow = true; b.userData.z = z;
+        const l = label(fx(m, 1) + ' kg', '#fff', 1.2); l.position.y = z / 2 + .6; b.add(l); root.add(b); return b;
+      }
+
+      let b1, b2, pw, rope, L = 10, ox = 0, pr = .4, pcx = .5, pcy = 0, FL = 0;
+      function build() {
+        while (root.children.length) root.remove(root.children[0]);
+        rope = null;
+        const { m1, m2, F, mu, th } = V, t = (mode == 'flat' ? 0 : th) * R;
+        if (mode == 'flat' || mode == 'incline') {
+          L = mode == 'flat' ? 12 : 10;
+          const Lc = L * Math.cos(t), Ls = L * Math.sin(t);
+          ox = -Lc / 2; FL = -.3;
+          box(Lc + 3, .3, 3.6, ox + Lc / 2, -.15, 0, 0x5b6f8f);
+          if (mode == 'incline') {
+            const sh = new THREE.Shape(); sh.moveTo(0, 0); sh.lineTo(Lc, 0); sh.lineTo(Lc, Ls);
+            const w = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: 3, bevelEnabled: false }), std(0xc9a66b, .9));
+            w.position.set(ox, 0, -1.5); w.castShadow = w.receiveShadow = true; root.add(w);
+          }
+          b1 = blk(m1, T1);
+        } else if (mode == 'table') {
+          FL = -6; pr = .4; pcx = .5; const z = SZ(m1); pcy = z / 2 - pr;
+          box(9.6, .3, 3, -4.7, -.15, 0, 0xa0713f);
+          box(.4, 5.7, .4, -8.7, -3.15, 1.2, 0x7b5a34); box(.4, 5.7, .4, -8.7, -3.15, -1.2, 0x7b5a34);
+          box(.4, 5.7, .4, -.6, -3.15, 1.2, 0x7b5a34); box(.4, 5.7, .4, -.6, -3.15, -1.2, 0x7b5a34);
+          box(.25, pcy + .5, .25, pcx, (pcy - .3) / 2, -1.35, 0x555e70); box(.8, .2, .25, pcx - .3, -.1, -1.35, 0x555e70);
+          b1 = blk(m1, T1); b2 = blk(m2, T2); mkPulley();
+        } else {
+          FL = -4; pr = 1.1; pcx = 0; pcy = 4.2;
+          box(.3, pcy + 4.3, .3, 0, (pcy - 4) / 2, -1.3, 0x555e70); box(3, .2, 3, 0, -4.1, -.6, 0x5b6f8f);
+          b1 = blk(m1, T1); b2 = blk(m2, T2); mkPulley();
+        }
+        dyn.add(new THREE.Group());
+        const gr = new THREE.GridHelper(40, 40, 0x8899bb, 0x8899bb);
+        gr.material.transparent = true; gr.material.opacity = .18; gr.position.y = FL - .01; root.add(gr);
+        const sh = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: .28 }));
+        sh.rotation.x = -Math.PI / 2; sh.position.y = FL; sh.receiveShadow = true; root.add(sh);
+        physics(); layout(); drawFBD(); showRes();
+      }
+
+      function mkPulley() {
+        pw = new THREE.Group(); pw.position.set(pcx, pcy, 0);
+        const w = new THREE.Mesh(new THREE.CylinderGeometry(pr, pr, .25, 40), std(0xd9dde8, .3));
+        w.rotation.x = Math.PI / 2; w.castShadow = true; pw.add(w);
+        const sp = new THREE.Mesh(new THREE.BoxGeometry(pr * 2, .06, .28), std(0x444c60)); pw.add(sp);
+        const ax = new THREE.Mesh(new THREE.CylinderGeometry(.06, .06, 1.7, 12), std(0x333a4a));
+        ax.rotation.x = Math.PI / 2; ax.position.z = -.5; pw.add(ax); root.add(pw);
+        rope = new THREE.Mesh(new THREE.BufferGeometry(), std(0xf3e6c4, .9)); root.add(rope);
+      }
+
+      function physics() {
+        const { m1, m2, F, mu, th } = V; let a = 0, B = [], txt = [], st = '';
+        if (mode == 'flat' || mode == 'incline') {
+          const t = (mode == 'flat' ? 0 : th) * R, W = m1 * g, N = W * Math.cos(t), net = F - W * Math.sin(t), fm = mu * N; let f = -net;
+          if (Math.abs(net) > fm) { a = (net - Math.sign(net) * fm) / m1; f = -Math.sign(net) * fm; st = 'Bergerak dipercepat (gesekan kinetis)'; }
+          else st = 'Diam (gesekan statis cukup)';
+          const u = [Math.cos(t), Math.sin(t)], n = [-Math.sin(t), Math.cos(t)];
+          B = [{ n: 'balok m', t, f: [['W', [0, -W]], ['N', [N * n[0], N * n[1]]], ['F', [F * u[0], F * u[1]]], ['f', [f * u[0], f * u[1]]]] }];
+          txt = [['W = m·g', fx(W) + ' N'], ['N = W·cosθ', fx(N) + ' N'], ['Gaya penggerak F − W·sinθ', fx(net) + ' N'], ['f maks = μN', fx(fm) + ' N'], ['f bekerja', fx(Math.abs(f)) + ' N'], ['a = ΣF/m', fx(a) + ' m/s²']];
+        } else if (mode == 'table') {
+          const W1 = m1 * g, W2 = m2 * g, fm = mu * W1; let T, f;
+          if (W2 <= fm) { T = W2; f = W2; st = 'Diam (gesekan statis cukup)'; }
+          else { a = (W2 - fm) / (m1 + m2); T = m2 * (g - a); f = fm; st = 'Bergerak dipercepat (gesekan kinetis)'; }
+          B = [{ n: 'balok m₁ (di meja)', t: 0, f: [['W', [0, -W1]], ['N', [0, W1]], ['T', [T, 0]], ['f', [-f, 0]]] }, { n: 'balok m₂ (menggantung)', t: 0, f: [['W', [0, -W2]], ['T', [0, T]]] }];
+          txt = [['W₁ = m₁·g', fx(W1) + ' N'], ['W₂ = m₂·g', fx(W2) + ' N'], ['f = μ·m₁·g', fx(f) + ' N'], ['a = (W₂−f)/(m₁+m₂)', fx(a) + ' m/s²'], ['T = m₂(g−a)', fx(T) + ' N']];
+        } else {
+          a = (m2 - m1) * g / (m1 + m2); const T = 2 * m1 * m2 * g / (m1 + m2), W1 = m1 * g, W2 = m2 * g;
+          st = Math.abs(a) < 1e-9 ? 'Seimbang (diam)' : 'Bergerak dipercepat';
+          B = [{ n: 'benda kiri m₁', t: 0, f: [['W', [0, -W1]], ['T', [0, T]]] }, { n: 'benda kanan m₂', t: 0, f: [['W', [0, -W2]], ['T', [0, T]]] }];
+          txt = [['W₁ = m₁·g', fx(W1) + ' N'], ['W₂ = m₂·g', fx(W2) + ' N'], ['a = (m₂−m₁)g/(m₁+m₂)', fx(a) + ' m/s²'], ['T = 2m₁m₂g/(m₁+m₂)', fx(T) + ' N']];
+        }
+        ph = { a, B, txt, st };
+      }
+
+      function showRes() { $('#st').textContent = ph.st; $('#res').innerHTML = ph.txt.map(([k, v]) => `<div><span>${k}</span><b>${v}</b></div>`).join(''); }
+
+      const cyl = new THREE.CylinderGeometry(.045, .045, 1, 8), cone = new THREE.ConeGeometry(.13, 1, 12), am = {};
+      const mat = c => am[c] || (am[c] = new THREE.MeshBasicMaterial({ color: c, depthTest: false }));
+      function arrow(o, v, k, Fm) {
+        const Lh = Math.hypot(v[0], v[1]); if (Lh < 1e-6) return;
+        const len = Math.max(.6, 3.2 * Lh / Fm), hd = .34, d = new THREE.Vector3(v[0] / Lh, v[1] / Lh, 0), gp = new THREE.Group();
+        gp.position.copy(o); gp.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
+        const a = new THREE.Mesh(cyl, mat(COL[k])); a.scale.y = len - hd; a.position.y = (len - hd) / 2;
+        const h = new THREE.Mesh(cone, mat(COL[k])); h.scale.y = hd; h.position.y = len - hd / 2;
+        a.renderOrder = h.renderOrder = 10;
+        const l = label(k, COL[k], .7); l.position.y = len + .3; gp.add(a, h, l); dyn.add(gp);
+      }
+
+      function lim() {
+        const sz = b1.userData.z;
+        if (mode == 'flat' || mode == 'incline') { const d0 = mode == 'flat' ? sz / 2 + .6 : L * .5; return [sz / 2 + .05 - d0, L - sz / 2 - .05 - d0, d0]; }
+        if (mode == 'table') return [-9, Math.min(4.5, .1 - sz / 2 - (-6.5)), 0];
+        return [-2, 2, 0];
+      }
+
+      function layout() {
+        const sz = b1.userData.z;
+        if (mode == 'flat' || mode == 'incline') {
+          const t = (mode == 'flat' ? 0 : V.th) * R, d = lim()[2] + s;
+          b1.position.set(ox + d * Math.cos(t) - Math.sin(t) * sz / 2, d * Math.sin(t) + Math.cos(t) * sz / 2, 0); b1.rotation.z = t;
+        } else if (mode == 'table') {
+          const x = -6.5 + s; b1.position.set(x, sz / 2, 0); b1.rotation.z = 0; const z2 = b2.userData.z;
+          b2.position.set(pcx + pr, pcy - 1.1 - s - z2 / 2, 0);
+          const yr = sz / 2, pts = [new THREE.Vector3(x + sz / 2, yr, 0)];
+          for (let i = 0; i <= 12; i++) { const q = (90 - i * 7.5) * R; pts.push(new THREE.Vector3(pcx + pr * Math.cos(q), pcy + pr * Math.sin(q), 0)); }
+          pts.push(new THREE.Vector3(pcx + pr, b2.position.y + z2 / 2, 0)); setRope(pts); pw.rotation.z = -s / pr;
+        } else {
+          const z1 = sz, z2 = b2.userData.z, t0 = 1.6;
+          b1.position.set(-pr, t0 + s - z1 / 2, 0); b2.position.set(pr, t0 - s - z2 / 2, 0);
+          const pts = [new THREE.Vector3(-pr, t0 + s, 0)];
+          for (let i = 0; i <= 24; i++) { const q = (180 - i * 7.5) * R; pts.push(new THREE.Vector3(pr * Math.cos(q), pcy + pr * Math.sin(q), 0)); }
+          pts.push(new THREE.Vector3(pr, t0 - s, 0)); setRope(pts); pw.rotation.z = -s / pr;
+        }
+        while (dyn.children.length) dyn.remove(dyn.children[0]);
+        if ($('#va').checked) {
+          const Fm = Math.max(...ph.B.flatMap(b => b.f.map(([, v]) => Math.hypot(...v))), 1);
+          ph.B.forEach((b, i) => b.f.forEach(([k, v]) => arrow((i ? b2 : b1).position, v, k, Fm)));
+        }
+      }
+
+      function setRope(p) { rope.geometry.dispose(); rope.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(p, false, 'catmullrom', 0), 60, .035, 6); }
+
+      function drawFBD() {
+        const cv = $('#fbd'), n = ph.B.length, d = devicePixelRatio || 1;
+        cv.width = 340 * d; cv.height = 210 * n * d;
+        const x = cv.getContext('2d'); x.setTransform(d, 0, 0, d, 0, 0);
+        const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#222';
+        const mut = getComputedStyle(document.documentElement).getPropertyValue('--mut').trim();
+        ph.B.forEach((b, i) => {
+          const cx = 170, cy = 108 + 210 * i, Fm = Math.max(...b.f.map(([, v]) => Math.hypot(...v)), 1);
+          x.fillStyle = mut; x.font = '600 12px Inter,sans-serif'; x.textAlign = 'left'; x.fillText('Benda: ' + b.n, 10, 20 + 210 * i);
+          x.save(); x.translate(cx, cy); x.rotate(-b.t); x.fillStyle = '#b9824a'; x.strokeStyle = ink; x.lineWidth = 2;
+          x.fillRect(-22, -22, 44, 44); x.strokeRect(-22, -22, 44, 44); x.restore();
+          b.f.forEach(([k, v]) => {
+            const Lh = Math.hypot(v[0], v[1]); if (Lh < 1e-6) return;
+            const len = Math.max(26, 78 * Lh / Fm), ux = v[0] / Lh, uy = -v[1] / Lh, ex = cx + ux * len, ey = cy + uy * len;
+            x.strokeStyle = x.fillStyle = COL[k]; x.lineWidth = 3;
+            x.beginPath(); x.moveTo(cx, cy); x.lineTo(ex, ey); x.stroke();
+            const an = Math.atan2(uy, ux);
+            x.beginPath(); x.moveTo(ex, ey);
+            x.lineTo(ex - 10 * Math.cos(an - .4), ey - 10 * Math.sin(an - .4));
+            x.lineTo(ex - 10 * Math.cos(an + .4), ey - 10 * Math.sin(an + .4)); x.fill();
+            x.font = '600 12px Inter,sans-serif'; x.textAlign = ux < -.3 ? 'right' : ux > .3 ? 'left' : 'center';
+            x.fillText(k + ' = ' + fx(Lh, 1) + ' N', ex + ux * 6, ey + uy * 6 + (Math.abs(uy) > .5 ? (uy > 0 ? 12 : -4) : 4));
+          });
+        });
+      }
+
+      matchMedia('(prefers-color-scheme:dark)').onchange = drawFBD;
+
+      let last = performance.now();
+      function frame(now) {
+        const dt = Math.min(.033, (now - last) / 1000) * $('#sp').value;
+        last = now;
+        if (run) {
+          vel += ph.a * dt; s += vel * dt; tt += dt;
+          const [l0, l1] = lim();
+          if (s >= l1 || s <= l0) { s = Math.min(l1, Math.max(l0, s)); vel = 0; run = false; $('#go').textContent = '▶ Mulai'; }
+        }
+        layout();
+        $('#ht').textContent = 't = ' + fx(tt, 1) + ' s';
+        $('#hv').textContent = 'v = ' + fx(Math.abs(vel), 1) + ' m/s';
+        $('#hs').textContent = 's = ' + fx(Math.abs(s), 1) + ' m';
+        $('#ha').textContent = 'a = ' + fx(ph.a, 2) + ' m/s²';
+        cam.position.set(tg.x + dist * Math.cos(el) * Math.sin(az), tg.y + dist * Math.sin(el), tg.z + dist * Math.cos(el) * Math.cos(az));
+        cam.lookAt(tg);
+        ren.render(sc, cam);
+        requestAnimationFrame(frame);
+      }
+
+      setMode('flat');
+      resizeSim();
+      requestAnimationFrame(frame);
+    }
+
+    if (window.THREE) {
+      runSim();
+    } else {
+      window.addEventListener('DOMContentLoaded', () => {
+        if (window.THREE) return runSim();
+        const t = document.createElement('script');
+        t.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+        t.onload = runSim;
+        t.onerror = () => {
+          document.body.insertAdjacentHTML('afterbegin', '<p style="padding:20px">Gagal memuat Three.js. Periksa koneksi internet.</p>');
+        };
+        document.head.appendChild(t);
+      });
+    }
+  })();
   </script>
 </body>
 </html>
